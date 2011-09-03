@@ -1,18 +1,14 @@
-const SUpE_META=<><![CDATA[
+scr_meta=<><![CDATA[
 // ==UserScript==
-// @name         EqdBannerRotation
-// @shortname    EqDB
+// @name         Equestria Daily Banner Rotation
+// @shortname    EqDBR
 // @namespace    http://danneh.net
-// @description  Random Eqd Banners!
+// @description  Random Equestria Daily Banners!
 // @match        http://www.equestriadaily.com/*
-// @include	     http://www.equestriadaily.com/*
+// @include      http://www.equestriadaily.com/*
 // @run-at       document-end
-// @released     2011/9/3 14:55:00
-// @frequency    1 minute
-// @releaseurl   http://www.userscripts.org/scripts/source/112038.user.js
-// @scripturl    http://www.userscripts.org/scripts/source/112038.user.js
-// @releaseurl   http://github.com/Danneh/EqdBannerRotation/raw/master/eqd.user.js
-// @scripturl    http://github.com/Danneh/EqdBannerRotation/raw/master/eqd.user.js
+// @version      1
+// @require      http://userscripts.org/scripts/source/68559.user.js
 // ==/UserScript==
 ]]></>.toString();
 
@@ -28,25 +24,93 @@ var include_new_special = true; /* new-style special banners */
 /* Banners
 */
 
-var banners = []
+var banner_url = "http://eqdbr.byethost7.com/banners/";
+var banners = [];   // banner image urls
+var banners_w = []; // banner px widths
+var banners_h = []; // banner px heights
 
 if(include_old) {
-	/* pinkie don't give a */ banners.push("pinkie link");
-	/* ed banner group */ banners.push("ed link");
+	// dash
+		banners.push(banner_url + "old/Dash.png");
+		banners_w.push("900"); banners_h.push("350");
+	// ed1
+		banners.push(banner_url + "old/ED1.png");
+		banners_w.push("1100"); banners_h.push("350");
+	// ed2
+		banners.push(banner_url + "old/ED2.png");
+		banners_w.push("667"); banners_h.push("367");
+	// filly
+		banners.push(banner_url + "old/Filly.png");
+		banners_w.push("911"); banners_h.push("425");
+	// fluttershy
+		banners.push(banner_url + "old/Fluttershy.png");
+		banners_w.push("1000"); banners_h.push("370");
+	// luna
+		banners.push(banner_url + "old/Luna.png");
+		banners_w.push("682"); banners_h.push("397");
+	// octavia
+		banners.push(banner_url + "old/Octavia.png");
+		banners_w.push("911"); banners_h.push("396");
+	// pinkie don't give a
+		banners.push(banner_url + "old/Pinkie%20Don%27t%20Give%20a%20Buck.png");
+		banners_w.push("1000"); banners_h.push("350");
+	// pinkie pie madness
+		banners.push(banner_url + "old/Pinkie%20Pie.png");
+		banners_w.push("700"); banners_h.push("325");
+	// rarity
+		banners.push(banner_url + "old/Rarity.png");
+		banners_w.push("900"); banners_h.push("350");
+	// trixie
+		banners.push(banner_url + "old/Trixie.png");
+		banners_w.push("700"); banners_h.push("350");
+	// trollestia
+		banners.push(banner_url + "old/Trollestia.png");
+		banners_w.push("908"); banners_h.push("350");
+	// twilight
+		banners.push(banner_url + "old/Twilight.png");
+		banners_w.push("911"); banners_h.push("425");
 }
 
 if(include_old_special) {
-	/* 4th of july */ banners.push("4th link");
+	// 2'000'000 pageviews
+		banners.push(banner_url + "old/special/2%27000%27000%20Pageviews.png");
+		banners_w.push("800"); banners_h.push("440");
+	// 4th of july
+		banners.push(banner_url + "old/special/4th%20of%20July.png");
+		banners_w.push("1000"); banners_h.push("300");
+	// battle
+		banners.push(banner_url + "old/special/Battle.png");
+		banners_w.push("700"); banners_h.push("350");
+	// finals over
+		banners.push(banner_url + "old/special/Finals%20Over.png");
+		banners_w.push("900"); banners_h.push("350");
+	// gala
+		banners.push(banner_url + "old/special/Gala.png");
+		banners_w.push("700"); banners_h.push("350");
+	// help me
+		banners.push(banner_url + "old/special/Help%20Me.png");
+		banners_w.push("900"); banners_h.push("350");
+	// new
+		banners.push(banner_url + "old/special/New.png");
+		banners_w.push("936"); banners_h.push("425");
 }
 
 if(include_new) {
-	/* fluttershy */ banners.push("fluttershy link");
-	/* trixie */ banners.push("trixie link");
+	// fluttershy
+		banners.push(banner_url + "new/Fluttershy.png");
+		banners_w.push("1100"); banners_h.push("350");
+	// trixie
+		banners.push(banner_url + "new/Trixie.png");
+		banners_w.push("1100"); banners_h.push("350");
 }
 
 if(include_new_special) {
-	/* brony day */ banners.push("brony link");
-	/* 30000000 views */ banners.push("30000000 link");
+	// brony day
+		banners.push(banner_url + "new/special/Brony%20Appreciation%20Day.png");
+		banners_w.push("1100"); banners_h.push("350");
+	// 30'000'000 pageviews
+		banners.push(banner_url + "new/special/30%27000%27000%20Pageviews.png");
+		banners_w.push("1100"); banners_h.push("350");
 }
 
 
@@ -59,285 +123,73 @@ function randomFromTo(from, to){
 }
 
 var banner = document.getElementById("Header1_headerimg");
+
 var banner_num = randomFromTo(0, banners.length-1);
+
+banner.src = ""; // preloading
 banner.src = banners[banner_num];
-banner.removeAttribute("width");
-banner.removeAttribute("height");
+banner.width = banners_w[banner_num];
+banner.height = banners_h[banner_num];
+
+banner.style.display = "block";
+banner.style.visibility = "visible";
 
 
-/* Autoupdate Script --- from https://www.userscripts.org/scripts/show/29878
+/* Autoupdate Script --- from https://www.userscripts.org/scripts/show/38017
 */
-SUpE_SelfUpdater();
-//Self-updater function is copyright <GasBuddyPhilly@yahoo.com>,
-// located at <http://userscripts.org/scripts/show/29878>,
-// and licensed under <http://gnu.org/licenses/gpl-3.0.html>,
-// incorporated herein by reference.
-function SUpE_SelfUpdater()
-{//localizable strings
- const CKNOW='Check Now For ';
- const UPDTE=' Update';
- const SETTT='Set ';
- const UPIVL=' Update Interval';
- const ITAPP='It appears this is the first time you\'ve used\n'+
-  'the ';
- const ISDES=' script.\n'+
-  'This script is designed to automatically\n'+
-  'check for updates every ';
- const CHIVL='.\n'+
-  'Would you like to change this interval?'
- const HWLNG='How long would you like the ';
- const WAITB='\n'+
-  'script to wait between update checks?\n'+
-  'Enter an interval such as "12 hours" or "1 week".';
- const DIDNT='I didn\'t understand that.\n\n';
- const UPIN4='The update interval for the ';
- const REMAI='\n'+
-  'script remains set at ';
- const UMAYS='.  You may\n'+
-  'select "';
- const FRMTH='" from the\n'+
-  '"User Script Commands..." menu at any time\n'+
-  'to change this.';
- const THRIS='There is an update available for the\n';
- const GRSCR=' Greasemonkey script.';
- const INSIT='\n'+
-  'Would you like to install it?';
- const UWILB='You will be reminded about this update again\n'+
-  'in ';
- const THRNO='There is no update available for the\n';
- const SELFU='The self-updater for the ';
- const WASUN='\n'+
-  'script was unable to locate any valid update\n'+
-  'information.  This could mean that this\n'+
-  'computer has lost its Internet connection, or\n'+
-  'that the original site for this script has gone\n'+
-  'down, moved, or disappeared.\n\n'+
-  'This script will check again in '
- //l10n not recommended
- const S_LU='SUpE_LastUpdateCheck';
- const S_UF='SUpE_UpdateFrequency';
- const INVDT='Invalid Date';
+var AnotherAutoUpdater = {
+ // Config values, change these to match your script
+ id: '112038', // Script id on Userscripts.org
+ hours: 6, // Hours to wait between update checks
 
- var parms=parseParms(SUpE_META);
- if(!parms.shortname)
- {parms.shortname=parms.name;
- };
- GM_registerMenuCommand
- (SETTT+parms.shortname+UPIVL,
-  function()
-  {GM_setValue(S_UF,askUF(parms,GM_getValue(S_UF)));
-  }
- );
- GM_registerMenuCommand
- (CKNOW+parms.shortname+UPDTE,
-  function()
-  {parms.m=true;
-   doUpCk();
-  }
- );
- var LU=new Date(GM_getValue(S_LU,''));
- if(LU.toString()==INVDT)
- {LU=new Date(0);
-  GM_setValue(S_LU,LU.toString());
- };
- var UF=GM_getValue(S_UF,'');
- if(!toMillis(UF))
- {if(!confirm(ITAPP+parms.name+ISDES+parms.frequency+CHIVL))
-  {UF=parms.frequency;
-   GM_setValue(S_UF,UF);
-   alert(UPIN4+parms.name+REMAI+UF+UMAYS+SETTT+parms.shortname+UPIVL+
-    FRMTH);
-  }else
-  {UF=askUF(parms,parms.frequency);
-   GM_setValue(S_UF,UF);
-  };
- };
- if(Number(new Date(LU))+toMillis(UF)<=new Date())
- {doUpCk();
- };
- function doUpCk()
- {LU=new Date();
-  GM_setValue(S_LU,LU.toString());
-  doXHRs();
- };
- function doXHRs(xhr)
- {var lyn,dte;
-  GM_log('pass '+parms.i);
-  if(!xhr)
-  {GM_log('no response to look at - moving on');
-   nextXHR(parms);
-  }else
-  {GM_log('response received');
-   if(!xhr.status)
-   {GM_log('no status found in response - moving on');
-    nextXHR(parms);
-   }else
-   {GM_log('status code of "'+xhr.status+'" received');
-    if(xhr.status!=200)
-    {GM_log('error status received - moving on');
-     nextXHR(parms);
-    }else
-    {GM_log('successful status received');
-     if(!xhr.responseText)
-     {GM_log('no response text received - moving on');
-      nextXHR(parms);
-     }else
-     {GM_log(xhr.responseText.length+
-       ' characters of response text received');
-      lyn=xhr.responseText.
-       match(/\/\/ \@released\s+([^\r\n<]+)\s*[\r\n<]/);
-      if(!lyn||!lyn[1])
-      {GM_log('no release date in response text - moving on');
-       nextXHR(parms);
-      }else
-      {dte=new Date(lyn[1]);
-       if(dte.toString()==INVDT)
-       {GM_log('release date uninterpretable - moving on');
-        nextXHR(parms);
-       }else
-       {GM_log('release date of "'+dte.toString()+
-         '" found in response');
-        GM_log('comparing to installed release - "'+
-         parms.released.toString()+'"');
-        if(parms.released<dte)
-        {GM_log('release found is newer - '+
-         'getting new release from '+parms.scriptURLs[parms.i-1]);
-         if(confirm(THRIS+parms.name+GRSCR+INSIT))
-         {GM_openInTab(parms.scriptURLs[parms.i-1]);
-         }else
-         {alert(UWILB+UF+UMAYS+SETTT+parms.shortname+UPIVL+FRMTH);
-         };
-         //reset for next time (if any)
-         parms.i=0;
-         parms.m=false;
-        }else
-        {GM_log('release found is not newer - ending update check');
-         if(parms.m)
-         {alert(THRNO+parms.name+GRSCR);
-         };
-         //reset for next time (if any)
-         parms.i=0;
-         parms.m=false;
-        };//end if(parms.released<dte)
-       };//end if(dte.toString()==INVDT)
-      };//end if(!lyn||!lyn[1])
-     };//end if(!xhr.responseText)
-    };//end if(xhr.status!=200)
-   };//end if(!xhr.status)
-  };//end if(!xhr)
- };//end doXHRs()
- function nextXHR(pms)
- {if(pms.releaseURLs[pms.i])
-  {GM_log('update check #'+(pms.i+1)+' - checking '+
-    pms.releaseURLs[pms.i]);
-   GM_xmlhttpRequest
-   ({method:            'GET',
-     url:               pms.releaseURLs[pms.i],
-     headers:
-     {'Cache-Control':  'no-cache',
-      'Pragma':         'no-cache'
-     },
-     onerror:           doXHRs,
-     onload:            doXHRs
+ // Don't edit after this line, unless you know what you're doing ;-)
+ name: /\/\/\s*@name\s+(.*)\s*\n/i.exec(scr_meta)[1],
+ version: /\/\/\s*@version\s+(.*)\s*\n/i.exec(scr_meta)[1].replace(/\./g, ''),
+ time: new Date().getTime(),
+ call: function(response) {
+    GM_xmlhttpRequest({
+      method: 'GET',
+	  url: 'https://userscripts.org/scripts/source/'+this.id+'.meta.js',
+	  onload: function(xpr) {AnotherAutoUpdater.compare(xpr,response);}
+      });
+  },
+ compare: function(xpr,response) {
+    this.xversion=/\/\/\s*@version\s+(.*)\s*\n/i.exec(xpr.responseText);
+    this.xname=/\/\/\s*@name\s+(.*)\s*\n/i.exec(xpr.responseText);
+    if ( (this.xversion) && (this.xname[1] == this.name) ) {
+      this.xversion = this.xversion[1].replace(/\./g, '');
+      this.xname = this.xname[1];
+    } else {
+      if ( (xpr.responseText.match("the page you requested doesn't exist")) || (this.xname[1] != this.name) ) 
+	GM_setValue('updated_'+this.id, 'off');
+      return false;
     }
-   );
-   pms.i++;
-  }else
-  {GM_log('ran out of places to look for updates');
-   if(confirm(SELFU+pms.name+WASUN+UF+CHIVL))
-   {UF=askUF(pms,UF);
-    GM_setValue(S_UF,UF);
-   };
-   //reset for next time (if any)
-   pms.i=0;
-   pms.m=false;
-  };
- };
-
- //subroutines
- function parseParms(metaBlock)
- {var metalines=metaBlock.match(/^\/\/ \@\S+\s+.+$/gm);
-  var metaparms=new ParmPack;
-  var lineparts,i;
-  for(i=0;i<metalines.length;i++)
-  {lineparts=metalines[i].match(/^\/\/ \@(\S+)\s+(.+)$/);
-   switch(lineparts[1])
-   {case 'name':
-    case 'shortname':
-     metaparms[lineparts[1]]=lineparts[2];
-     break;
-    case 'released':
-     metaparms[lineparts[1]]=new Date(lineparts[2]);
-     break;
-    case 'frequency':
-     if(toMillis(lineparts[2]))
-     {metaparms[lineparts[1]]=lineparts[2];
-     };
-     break;
-    case 'releaseURL':
-    case 'scriptURL':
-     metaparms[lineparts[1]+'s'].push(lineparts[2]);
-     break;
-   };
-  };
-  return metaparms;
- };
- function toMillis(lyne)
- {if(!lyne)
-  {return null;
-  };
-  var wurds=lyne.split(/\s+/);
-  if(wurds.length!=2)
-  {return null;
-  };
-  switch(wurds[1].toLowerCase())
-  {case 'months':
-   case 'month':
-    wurds[0]*=4.4;//close enough
-   case 'weeks':
-   case 'week':
-    wurds[0]*=7;
-   case 'days':
-   case 'day':
-    wurds[0]*=24;
-   case 'hours':
-   case 'hour':
-    wurds[0]*=60;
-   case 'minutes':
-   case 'minute':
-    return wurds[0]*60*1000;
-   default:
-    return null;
-  };
- };
- function askUF(pms,was)
- {var x=prompt(HWLNG+pms.name+WAITB,was);
-  if(x==null)
-  {alert(UPIN4+pms.name+REMAI+was+UMAYS+SETTT+pms.shortname+UPIVL+
-    FRMTH);
-   return was;
-  }else
-  {while(!toMillis(x))
-   {x=prompt(DIDNT+HWLNG+pms.name+WAITB,was);
-    if(x==null)
-    {alert(UPIN4+pms.name+REMAI+was+UMAYS+SETTT+pms.shortname+UPIVL+
-      FRMTH);
-     return was;
-    };
-   };
-   return x;
-  };
- };
-
- //constructor
- function ParmPack()
- {this.name=null;
-  this.shortname=null;
-  this.released=null;
-  this.frequency=null;
-  this.releaseURLs=[];
-  this.scriptURLs=[];
-  this.i=0;
-  this.m=false;
- };
+    if ( (+this.xversion > +this.version) && (confirm('A new version of the '+this.xname+' user script is available. Do you want to update?')) ) {
+      GM_setValue('updated_'+this.id, this.time+'');
+      top.location.href = 'https://userscripts.org/scripts/source/'+this.id+'.user.js';
+    } else if ( (this.xversion) && (+this.xversion > +this.version) ) {
+      if(confirm('Do you want to turn off auto updating for this script?')) {
+	GM_setValue('updated_'+this.id, 'off');
+	GM_registerMenuCommand("Auto Update "+this.name, function(){GM_setValue('updated_'+this.id, new Date().getTime()+''); AnotherAutoUpdater.call(true);});
+	alert('Automatic updates can be re-enabled for this script from the User Script Commands submenu.');
+      } else {
+	GM_setValue('updated_'+this.id, this.time+'');
+      }
+    } else {
+      if(response) alert('No updates available for '+this.name);
+      GM_setValue('updated_'+this.id, this.time+'');
+    }
+  },
+  check: function() {
+    if (GM_getValue('updated_'+this.id, 0) == "off")
+      GM_registerMenuCommand("Enable "+this.name+" updates", function(){GM_setValue('updated_'+this.id, new Date().getTime()+'');AnotherAutoUpdater.call(true)});
+    else {
+      if (+this.time > (+GM_getValue('updated_'+this.id, 0) + 1000*60*60*self.hours)) {  //*24*this.days
+        GM_setValue('updated_'+this.id, this.time+'');
+        this.call();
+      }
+      GM_registerMenuCommand("Check "+this.name+" for updates", function(){GM_setValue('updated_'+this.id, new Date().getTime()+'');AnotherAutoUpdater.call(true)});
+    }
+  }
 };
+if (self.location == top.location && typeof GM_xmlhttpRequest != 'undefined') AnotherAutoUpdater.check();
