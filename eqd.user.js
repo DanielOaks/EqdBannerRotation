@@ -1,16 +1,18 @@
 const SUpE_META=<><![CDATA[
 // ==UserScript==
-// @name		 EqdBannerRotation
-// @shortname	 EqDB
-// @namespace	 http://danneh.net
+// @name         EqdBannerRotation
+// @shortname    EqDB
+// @namespace    http://danneh.net
 // @description  Random Eqd Banners!
-// @match	     http://www.equestriadaily.com/*
+// @match        http://www.equestriadaily.com/*
 // @include	     http://www.equestriadaily.com/*
-// @run-at		 document-end
-// @released	 2011/9/3 14:55:00
-// @frequency	 1 minute
-// @releaseurl	 http://github.com/Danneh/EqdBannerRotation/raw/master/eqd.user.js
-// @scripturl	 http://github.com/Danneh/EqdBannerRotation/raw/master/eqd.user.js
+// @run-at       document-end
+// @released     2011/9/3 14:55:00
+// @frequency    1 minute
+// @releaseurl   http://www.userscripts.org/scripts/source/112038.user.js
+// @scripturl    http://www.userscripts.org/scripts/source/112038.user.js
+// @releaseurl   http://github.com/Danneh/EqdBannerRotation/raw/master/eqd.user.js
+// @scripturl    http://github.com/Danneh/EqdBannerRotation/raw/master/eqd.user.js
 // ==/UserScript==
 ]]></>.toString();
 
