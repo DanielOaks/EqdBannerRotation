@@ -7,10 +7,10 @@ const SUpE_META=<><![CDATA[
 // @match	     http://www.equestriadaily.com/*
 // @include	     http://www.equestriadaily.com/*
 // @run-at		 document-end
-// @released	 2011/9/3 14:53:00
+// @released	 2011/9/3 14:55:00
 // @frequency	 1 minute
-// @releaseurl	 https://github.com/Danneh/EqdBannerRotation/raw/master/eqd.user.js
-// @scripturl	 https://github.com/Danneh/EqdBannerRotation/raw/master/eqd.user.js
+// @releaseurl	 http://github.com/Danneh/EqdBannerRotation/raw/master/eqd.user.js
+// @scripturl	 http://github.com/Danneh/EqdBannerRotation/raw/master/eqd.user.js
 // ==/UserScript==
 ]]></>.toString();
 
