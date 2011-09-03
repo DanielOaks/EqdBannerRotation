@@ -7,8 +7,7 @@ scr_meta=<><![CDATA[
 // @match        http://www.equestriadaily.com/*
 // @include      http://www.equestriadaily.com/*
 // @run-at       document-end
-// @version      1
-// @require      http://userscripts.org/scripts/source/68559.user.js
+// @version      2
 // ==/UserScript==
 ]]></>.toString();
 
@@ -131,8 +130,8 @@ banner.src = banners[banner_num];
 banner.width = banners_w[banner_num];
 banner.height = banners_h[banner_num];
 
-banner.style.display = "block";
-banner.style.visibility = "visible";
+banner.style.display = "block";      // Google Chrome likes to set
+banner.style.visibility = "visible"; //  these to none, hidden
 
 
 /* Autoupdate Script --- from https://www.userscripts.org/scripts/show/38017
