@@ -7,17 +7,20 @@ scr_meta=<><![CDATA[
 // @match        http://www.equestriadaily.com/*
 // @include      http://www.equestriadaily.com/*
 // @run-at       document-end
-// @version      2
+// @version      3
 // ==/UserScript==
 ]]></>.toString();
 
 
 /* Options
 */
-var include_old         = true; /* old-style banners */
-var include_old_special = true; /* old-style special banners */
-var include_new         = true; /* new-style banners */
-var include_new_special = true; /* new-style special banners */
+var mins_for_new_banner = 5;    // if a new banner is set, wait this many minutes
+                                //  before resuming the banner randomisation
+
+var include_old         = true; // old-style banners 
+var include_old_special = true; // old-style special banners 
+var include_new         = true; // new-style banners 
+var include_new_special = true; // new-style special banners 
 
 
 /* Banners
@@ -28,7 +31,7 @@ var banners = [];   // banner image urls
 var banners_w = []; // banner px widths
 var banners_h = []; // banner px heights
 
-if(include_old) {
+if (include_old) {
 	// dash
 		banners.push(banner_url + "old/Dash.png");
 		banners_w.push("900"); banners_h.push("350");
@@ -70,7 +73,7 @@ if(include_old) {
 		banners_w.push("911"); banners_h.push("425");
 }
 
-if(include_old_special) {
+if (include_old_special) {
 	// 2'000'000 pageviews
 		banners.push(banner_url + "old/special/2%27000%27000%20Pageviews.png");
 		banners_w.push("800"); banners_h.push("440");
@@ -94,7 +97,7 @@ if(include_old_special) {
 		banners_w.push("936"); banners_h.push("425");
 }
 
-if(include_new) {
+if (include_new) {
 	// fluttershy
 		banners.push(banner_url + "new/Fluttershy.png");
 		banners_w.push("1100"); banners_h.push("350");
@@ -103,7 +106,7 @@ if(include_new) {
 		banners_w.push("1100"); banners_h.push("350");
 }
 
-if(include_new_special) {
+if (include_new_special) {
 	// brony day
 		banners.push(banner_url + "new/special/Brony%20Appreciation%20Day.png");
 		banners_w.push("1100"); banners_h.push("350");
@@ -122,16 +125,32 @@ function randomFromTo(from, to){
 }
 
 var banner = document.getElementById("Header1_headerimg");
+var currtime = new Date().getTime();
 
-var banner_num = randomFromTo(0, banners.length-1);
+if (GM_getValue('current_banner_src', 'None') == 'None') {
+	GM_setValue('current_banner_src', banner.src);
+	GM_setValue('current_banner_time', (currtime - 1000*60*(mins_for_new_banner+1))+'');
+}
+if (GM_getValue('current_banner_src') != banner.src) {
+	GM_setValue('current_banner_src', banner.src);
+	GM_setValue('current_banner_time', currtime+'');
+}
+else {
+	if (currtime > (parseInt(GM_getValue('current_banner_time', 0)) + 1000*60*mins_for_new_banner)) {
+		var banner_num = randomFromTo(0, banners.length-1);
+		banner.src = ""; // preloading
+		banner.src = banners[banner_num];
+		banner.width = banners_w[banner_num];
+		banner.height = banners_h[banner_num];
+		
+		banner.style.display = "block";      // Google Chrome likes to set
+		banner.style.visibility = "visible"; //  these to none, hidden
+	}
+	else {
+		// mins_for_new_banner has no passed, so leave new banner alone
+	}
+}
 
-banner.src = ""; // preloading
-banner.src = banners[banner_num];
-banner.width = banners_w[banner_num];
-banner.height = banners_h[banner_num];
-
-banner.style.display = "block";      // Google Chrome likes to set
-banner.style.visibility = "visible"; //  these to none, hidden
 
 
 /* Autoupdate Script --- from https://www.userscripts.org/scripts/show/38017
