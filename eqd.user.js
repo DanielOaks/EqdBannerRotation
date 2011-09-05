@@ -4,10 +4,11 @@ scr_meta=<><![CDATA[
 // @shortname    EqDBR
 // @namespace    http://danneh.net
 // @description  Random Equestria Daily Banners!
+// @icon         http://eqdbr.byethost7.com/eqdbanners/eqdbr.png
 // @match        http://www.equestriadaily.com/*
 // @include      http://www.equestriadaily.com/*
 // @run-at       document-end
-// @version      3
+// @version      8
 // ==/UserScript==
 ]]></>.toString();
 
@@ -26,7 +27,7 @@ var include_new_special = true; // new-style special banners
 /* Banners
 */
 
-var banner_url = "http://eqdbr.byethost7.com/banners/";
+var banner_url = "http://eqdbr.byethost7.com/eqdbanners/";
 var banners = [];   // banner image urls
 var banners_w = []; // banner px widths
 var banners_h = []; // banner px heights
@@ -137,8 +138,21 @@ if (GM_getValue('current_banner_src') != banner.src) {
 }
 else {
 	if (currtime > (parseInt(GM_getValue('current_banner_time', 0)) + 1000*60*mins_for_new_banner)) {
+		
+		banner._src = banner.src;       // backup old values for if the random banner fails
+		banner._width = banner.width;
+		banner._height = banner.height;
+		banner._updatecalled = false;
+		
+		banner.onerror = function(){
+			banner.src = banner._src;
+			banner.width = banner._width;
+			banner.height = banner._height;
+			AnotherAutoUpdater.call();
+			banner._updatecalled = true;
+		}
+		
 		var banner_num = randomFromTo(0, banners.length-1);
-		banner.src = ""; // preloading
 		banner.src = banners[banner_num];
 		banner.width = banners_w[banner_num];
 		banner.height = banners_h[banner_num];
@@ -158,7 +172,7 @@ else {
 var AnotherAutoUpdater = {
  // Config values, change these to match your script
  id: '112038', // Script id on Userscripts.org
- hours: 6, // Hours to wait between update checks
+ days: (1/60/24) * 60, // (that last '60' is how many Minutes instead) Days to wait between update checks
 
  // Don't edit after this line, unless you know what you're doing ;-)
  name: /\/\/\s*@name\s+(.*)\s*\n/i.exec(scr_meta)[1],
@@ -202,7 +216,7 @@ var AnotherAutoUpdater = {
     if (GM_getValue('updated_'+this.id, 0) == "off")
       GM_registerMenuCommand("Enable "+this.name+" updates", function(){GM_setValue('updated_'+this.id, new Date().getTime()+'');AnotherAutoUpdater.call(true)});
     else {
-      if (+this.time > (+GM_getValue('updated_'+this.id, 0) + 1000*60*60*self.hours)) {  //*24*this.days
+      if (+this.time > (+GM_getValue('updated_'+this.id, 0) + 1000*60*60*24*this.days)) {
         GM_setValue('updated_'+this.id, this.time+'');
         this.call();
       }
@@ -210,4 +224,4 @@ var AnotherAutoUpdater = {
     }
   }
 };
-if (self.location == top.location && typeof GM_xmlhttpRequest != 'undefined') AnotherAutoUpdater.check();
+if (self.location == top.location && typeof GM_xmlhttpRequest != 'undefined' && banner._updatecalled == false) AnotherAutoUpdater.check();
